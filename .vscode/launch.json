@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug API (NestJS)",
+      "args": ["start", "--debug", "--watch"],
+      "executable": "${workspaceFolder}/node_modules/.bin/nest",
+      "protocol": "inspector",
+      "cwd": "${workspaceFolder}/apps/api",
+      "sourceMaps": true,
+      "console": "integratedTerminal",
+      "restart": true
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to API",
+      "port": 9229,
+      "restart": true,
+      "cwd": "${workspaceFolder}/apps/api"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run dev:api (NPM)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev:api"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    }
+  ]
+}
