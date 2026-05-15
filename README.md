@@ -1,76 +1,115 @@
-# Aurora Commerce
+# Aurora Commerce 🌌
 
-A modern React + NestJS + MongoDB ecommerce starter designed so retrieval-augmented product search can be added cleanly.
+A premium, full-stack ecommerce starter kit built with **React**, **NestJS**, and **MongoDB**, specifically engineered for seamless **Retrieval-Augmented Generation (RAG)** integration.
 
-## Stack
+Aurora Commerce goes beyond a simple storefront, providing a sophisticated foundation for AI-powered product discovery, grounded question answering, and modern catalog management.
 
-- React + TypeScript + Vite for the storefront
-- NestJS + Mongoose for the API
-- MongoDB for catalog storage
-- RAG-ready product schema with searchable text, knowledge chunks, and embedding slots
+---
 
-## Structure
+## ✨ Key Features
 
-- `apps/web`: storefront
-- `apps/api`: backend API
+### 🛍️ Storefront & Catalog
+- **Premium UI**: Modern, responsive React storefront built with Vite.
+- **Dynamic Catalog**: Full product lifecycle management with searchable text, features, and rich metadata.
+- **Advanced Search**: Hybrid search scoring combining traditional keyword matching with semantic similarity.
 
-## Run
+### 🧠 AI & RAG Integration
+- **Multi-Provider AI**: Native support for **OpenAI** and **AWS Bedrock** (Claude 3) for grounded answer generation.
+- **Vector Search**: Integrated MongoDB Atlas Vector Search support with an intelligent in-app fallback for local development.
+- **Automatic Embeddings**: Automated backfill of product embeddings on startup using OpenAI or local fallbacks.
+- **Retrieval Engine**: Custom text builder that synthesizes product copy, specifications, tags, and knowledge chunks into a rich context for LLMs.
+- **Grounded Q&A**: A `/products/ask` endpoint that generates sophisticated, citation-backed answers directly from your product catalog.
 
-1. Install dependencies:
+### 🛡️ Admin & Management
+- **Admin Portal**: A protected dashboard for product creation, bulk CSV uploads, and manual reindexing.
+- **Knowledge Management**: Dedicated slots for "Knowledge Chunks"—store facts, policies, and detailed specifications that the AI uses to answer customer queries.
 
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React 18, TypeScript, Vite, Vanilla CSS (Premium Aesthetics).
+- **Backend**: NestJS, Mongoose, OpenAI SDK, AWS SDK (@aws-sdk/client-bedrock-runtime).
+- **Database**: MongoDB (Local or Atlas Vector Search).
+- **Tooling**: NPM Workspaces (Monorepo), ESLint, Prettier.
+
+---
+
+## 🚀 Quick Start
+
+### 1. Clone & Install
 ```bash
+git clone <your-repo-url>
+cd aurora-commerce
 npm install
 ```
 
-2. Copy the environment examples:
-
+### 2. Environment Configuration
+Copy the example environment files for both the API and the Web apps:
 ```bash
 cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env
 ```
 
-3. Start the API:
+### 3. Launch Development Environment
+You can start both services from the root:
 
+**Start API:**
 ```bash
 npm run dev:api
 ```
 
-4. Start the frontend:
-
+**Start Storefront:**
 ```bash
 npm run dev:web
 ```
 
-## RAG Direction
+---
 
-The backend already includes:
+## 📂 Project Structure
 
-- `embedding` field on products
-- `knowledgeChunks` field for chunked product facts and policies
-- `searchableText` for indexing
-- hybrid search scoring with a clean seam for semantic similarity later
-- `/products/search` and `/products/:id/retrieval-context` endpoints
+```text
+.
+├── apps
+│   ├── api          # NestJS Backend (RAG Engine, Product API)
+│   └── web          # React Storefront & Admin Portal
+├── package.json     # Root workspace configuration
+└── README.md        # You are here
+```
 
-The current starter now also includes:
+---
 
-- automatic embedding backfill for products during API startup
-- OpenAI embeddings support with local fallback if `OPENAI_API_KEY` is not set
-- grounded answer generation through `POST /products/ask`
-- a dedicated retrieval-text builder that combines product copy, features, tags, and chunks
-- a separate `/admin` portal with login-backed product create, bulk upload, and reindexing
-- MongoDB Atlas vector-search support through `MONGODB_VECTOR_INDEX`, with in-app fallback when the Atlas index is not available
+## 🧪 RAG Workflow & Configuration
 
-To move from starter RAG to production RAG:
+Aurora is designed to scale from a local developer environment to a production-grade AI search engine.
 
+### Using OpenAI (Recommended)
 1. Set `OPENAI_API_KEY` in `apps/api/.env`.
-2. Set `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `ADMIN_TOKEN_SECRET` in `apps/api/.env`.
-3. Visit `/admin` in the web app and sign in before using product management actions.
-4. Start MongoDB, the API, and the web app.
-5. Open the storefront for customer search and `/admin` for the protected admin portal.
+2. Configure `RESPONSE_PROVIDER=openai`.
+3. The system will automatically generate embeddings for your catalog and use GPT models for answering.
 
-For real vector retrieval with MongoDB Atlas:
+### Using AWS Bedrock
+1. Set `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` in `apps/api/.env`.
+2. Configure `RESPONSE_PROVIDER=bedrock`.
+3. Set `BEDROCK_RESPONSE_MODEL` (defaults to Claude 3 Sonnet).
 
-1. Use MongoDB Atlas rather than local standalone MongoDB.
-2. Create a vector search index on the `embedding` field named `products_embedding_index` or update `MONGODB_VECTOR_INDEX`.
-3. Ensure products have OpenAI-generated embeddings stored in `embedding`.
-4. Use `semantic` or `hybrid` search modes to let Atlas vector search rank results.
+### Vector Search with MongoDB Atlas
+For true semantic search:
+1. Connect to a MongoDB Atlas cluster.
+2. Create a Search Index on the `embedding` field named `products_embedding_index`.
+3. Set `MONGODB_VECTOR_INDEX=products_embedding_index` in your `.env`.
+
+---
+
+## 🔐 Admin Access
+
+To access the product management features:
+1. Set `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `ADMIN_TOKEN_SECRET` in `apps/api/.env`.
+2. Navigate to `/admin` in the web application.
+3. Sign in to unlock bulk uploads, product creation, and catalog reindexing.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.

@@ -411,26 +411,57 @@ function StorefrontApp({
               {aiError ? <div className="error-banner">{aiError}</div> : null}
             </form>
 
-            <div className="assistant-card response-card">
-              <p className="eyebrow">Grounded answer</p>
-              <h4>{aiResult?.configured ? 'OpenAI response' : 'Retrieved fallback'}</h4>
-              <p className="assistant-answer">
-                {aiResult?.answer ??
-                  'Run a question to see a grounded answer built from the top retrieved products.'}
-              </p>
+            <div className="assistant-card response-card response-card-premium">
+              <div className="response-header">
+                <p className="eyebrow">Grounded answer</p>
+                <div className="ai-badge">
+                  <span className="sparkle-icon">✨</span>
+                  <span>AI Powered</span>
+                </div>
+              </div>
 
               {aiResult ? (
-                <>
-                  <div className="response-meta">
-                    <span>Model: {aiResult.model}</span>
-                    <span>Retrieved: {aiResult.retrievedCount}</span>
-                  </div>
-                  <div className="citation-list">
-                    {aiResult.citations.map((citation) => (
-                      <span key={citation.slug}>{citation.name}</span>
-                    ))}
-                  </div>
-                </>
+                <div className="response-meta-premium">
+                  <span>
+                    <strong>Model:</strong> {aiResult.model}
+                  </span>
+                  <span>
+                    <strong>Sources:</strong> {aiResult.retrievedCount}
+                  </span>
+                </div>
+              ) : null}
+
+              <div className="assistant-answer-premium">
+                {aiResult?.answer ? (
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: aiResult.answer
+                        .replace(/^#\s(.*)$/gm, '<h3>$1</h3>')
+                        .replace(/^##\s(.*)$/gm, '<h4>$1</h4>')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/^-\s(.*)$/gm, '<li>$1</li>')
+                        .replace(/(<li>.*<\/li>)/gs, (match) => `<ul>${match}</ul>`)
+                        .replace(/<\/ul>\s*<ul>/g, ''),
+                    }}
+                  />
+                ) : (
+                  'Run a question to see a grounded answer built from the top retrieved products.'
+                )}
+              </div>
+
+              {aiResult && aiResult.citations.length > 0 ? (
+                <div className="citation-grid">
+                  {aiResult.citations.map((citation) => (
+                    <button
+                      key={citation.slug}
+                      type="button"
+                      className="citation-pill"
+                      onClick={() => onNavigate(citation.slug)}
+                    >
+                      {citation.name}
+                    </button>
+                  ))}
+                </div>
               ) : null}
             </div>
           </div>
